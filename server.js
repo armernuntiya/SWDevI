@@ -2,12 +2,25 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
-const cors = require("cors");
 
 //Route File
-const hospitals = require(`./routes/hospitals`);
+const companies = require(`./routes/companies`);
 const auth = require(`./routes/auth`);
-const appointments = require(`./routes/appointments`);
+const bookings = require(`./routes/bookings`);
+const bookmarks = require(`./routes/bookmarks`);
+const blacklists = require(`./routes/blacklists`);
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const { xss } = require("express-xss-sanitizer");
+const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
+const cors = require("cors");
+
+//Rate Limiting
+const limiter = rateLimit({
+  windowsMs: 10 * 60 * 1000, //10 mins
+  max: 100,
+});
 
 //Load env vars
 dotenv.config({ path: "./config/config.env" });
@@ -22,13 +35,23 @@ app.use(cors());
 //Body parser
 app.use(express.json());
 
+//security middleware
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(xss());
+app.use(limiter);
+app.use(hpp());
+app.use(cors());
+
 //Cookie parser
 app.use(cookieParser());
 
 //Mount Routers
-app.use("/api/v1/hospitals", hospitals);
+app.use("/api/v1/companies", companies);
 app.use("/api/v1/auth", auth);
-app.use("/api/v1/appointments", appointments);
+app.use("/api/v1/bookings", bookings);
+app.use("/api/v1/bookmarks", bookmarks);
+app.use("/api/v1/blacklists", blacklists);
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(
