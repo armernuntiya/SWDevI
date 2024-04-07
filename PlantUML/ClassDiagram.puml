@@ -1,0 +1,92 @@
+@startuml Class Diagram Online Job Fair
+left to right direction
+package "OnlineJobFair"{
+    class "<<Application>>\nOnlineJobFairService" as OnlineJobFairService{
+    }
+
+    class "<<Resource>>\nCompanies" as ResourceCompanies{
+        <<GET>> +getCompanies():Company
+        <<POST>> +createCompany():Company
+    }
+
+    class "<<Resource>>\nCompany" as ResourceCompany{
+        <<GET>> +getCompany():Company
+        <<PUT>> +updateCompany():Company
+        <<DELETE>> +deleteCompany():Company
+    }
+    
+
+    class "<<Representation>>\nCompany" as RepresentationCompany {
+        -name 
+        -address
+        -website
+        -description
+        -tel
+    }
+
+    class "<<Resource>>\nAuth" as ResourceAuth{
+    }
+
+    class "<<Resource>>\nLogin" as ResourceLogin{
+        <<POST>> +login():User
+    }
+
+    class "<<Resource>>\nRegister" as ResourceRegister{
+        <<POST>> +register():User
+    }
+
+    class "<<Resource>>\nMe" as ResourceMe{
+        <<GET>> -getMe():User
+    }
+
+    class "<<Resource>>\nLogout" as ResourceLogout{
+        <<GET>> -logout():Void
+    }
+
+    class "<<Representation>>\nUser" as RepresentationUser{
+        -name
+        -email
+        -tel
+        -role        
+        -password
+    }
+
+    class "<<Resource>>\nBookings" as ResourceBookings{
+        <<GET>> +getBookings():Booking
+        <<POST>> +addBooking():Booking
+    }
+
+    class "<<Resource>>\nBooking" as ResourceBooking{
+        <<GET>> +getBooking():Booking
+        <<PUT>> +updateBooking():Booking
+        <<DELETE>> +deleteBooking():void
+    }
+
+    class "<<Representation>>\nBooking" as RepresentationBooking{
+        -bookDate
+        -user
+        -company
+        -createAt
+    }
+
+
+
+}
+
+    OnlineJobFairService ..>  ResourceCompanies:"/companies\n<<Path>>"
+    ResourceCompanies ..> ResourceCompany:"/{companyId}\n<<Path>>
+    ResourceCompany ..> RepresentationCompany: "<<use>>"
+
+    OnlineJobFairService ..>  ResourceAuth:"/auth\n<<Path>>"
+    ResourceAuth ..> ResourceLogin:"/login\n<<Path>>
+    ResourceAuth ..> ResourceRegister:"/register\n<<Path>>
+    ResourceAuth ..> ResourceMe:"/me\n<<Path>>
+    ResourceAuth ..> ResourceLogout:"/logout\n<<Path>>
+    ResourceLogin ..> RepresentationUser: "<<use>>"
+    ResourceRegister ..> RepresentationUser: "<<use>>"
+    ResourceMe ..> RepresentationUser: "<<use>>"
+
+    OnlineJobFairService ..>  ResourceBookings:"/bookings\n<<Path>>"
+    ResourceBookings ..> ResourceBooking:"/{bookingId}\n<<Path>>
+    ResourceBooking ..> RepresentationBooking: "<<use>>"
+@enduml

@@ -1,0 +1,52 @@
+@startuml ER Diagram Online Job Fair
+entity "Company" as company{
+    *company_id : number <<generated>>
+    *name : text
+    *address : text
+    website : text
+    *description : text
+    *tel : text
+}
+
+entity "User" as user{
+    *user_id: number <<generated>>
+    *name: text
+    *email: text
+    *tel: text
+    *role: enum
+    *password: text
+}
+
+entity "Blacklist" as blacklist{
+    *blacklist_id: number <<generated>>
+    *user_id: number <<FK>>
+    *company_id: number <<FK>>
+    *createAt: date <<generated>>
+}
+
+entity "Booking" as booking{
+    *booking_id: number <<generated>>
+    *bookDate: date
+    *user_id: number <<FK>>
+    *company_id: number <<FK>>
+    *createAt: date <<generated>>
+}
+
+entity "Bookmark" as bookmark{
+    *bookmark_id: number <<generated>>
+    *user_id: number <<FK>>
+    *company_id: number <<FK>>
+    *createAt: date <<generated>>
+}
+
+company ||--o{ bookmark
+bookmark }o--|| user
+
+company ||--o{ blacklist
+blacklist }o--|| user
+
+company ||--o{ booking
+booking }o--|| user
+
+
+@enduml
