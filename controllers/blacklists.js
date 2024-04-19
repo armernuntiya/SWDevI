@@ -7,30 +7,18 @@ const Booking = require("../models/Booking");
 //@access   Private
 exports.getBlacklists = async (req, res, next) => {
   let query;
-  if (req.params.companyID) {
-    console.log(req.params.companyID);
-    query = Blacklist.find(req.params.companyID).populate([
-      {
-        path: "company",
-        select: "name description tel",
-      },
-      {
-        path: "user",
-        select: "name email tel",
-      },
-    ]);
-  } else {
-    query = Blacklist.find().populate([
-      {
-        path: "company",
-        select: "name description tel",
-      },
-      {
-        path: "user",
-        select: "name email tel",
-      },
-    ]);
-  }
+
+  query = Blacklist.find().populate([
+    {
+      path: "company",
+      select: "name description tel",
+    },
+    {
+      path: "user",
+      select: "name email tel",
+    },
+  ]);
+
   try {
     const blacklists = await query;
 
@@ -125,13 +113,6 @@ exports.deleteBlacklist = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: `No blacklist with the id of ${req.params.id}`,
-      });
-    }
-
-    if (req.user.role !== "admin") {
-      return res.status(401).json({
-        success: false,
-        message: `User ${req.user.id} is not authorized to delete this blacklist`,
       });
     }
 

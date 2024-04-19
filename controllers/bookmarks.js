@@ -96,38 +96,6 @@ exports.addBookmark = async (req, res, next) => {
   }
 };
 
-//@desc     Update Bookmark
-//@route    PUT /api/v1/bookmarks/:id
-//@access   Private
-exports.updateBookmark = async (req, res, next) => {
-  try {
-    const bookmark = await Bookmark.findById(req.params.id);
-
-    if (!bookmark) {
-      return res.status(400).json({
-        success: false,
-        message: `No bookmark with the id of ${req.params.id}`,
-      });
-    }
-
-    if (bookmark.user.toString() !== req.user.id && req.user.role !== "admin") {
-      return res.status(401).json({
-        success: false,
-        message: `User ${req.user.id} is not authorized to update this bookmark`,
-      });
-    }
-
-    bookmark = await Bookmark.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    res.status(200).json({ success: true, data: bookmark });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ success: false, message: "Cannot update Bookmark" });
-  }
-};
-
 //@desc     Delete bookmark
 //@route    DELETE /api/v1/bookmarks/:id
 //@access   Private

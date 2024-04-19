@@ -10,7 +10,6 @@ const {
 //Include other resource router
 const bookingRouter = require("./bookings");
 const blacklistRouter = require("./blacklists");
-const bookmarkRouter = require("./bookmarks");
 
 const router = express.Router();
 
