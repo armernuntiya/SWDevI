@@ -28,7 +28,6 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add a phone number"],
       unique: true,
-      match: [/^[0-9]{10}$/],
     },
   },
   {
