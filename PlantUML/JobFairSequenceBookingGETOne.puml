@@ -8,14 +8,17 @@ title "Get One Booking (GET)"
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
 participant "<<router>>\n:bookings" as routerBookings
+participant "<<middleware>>\n:auth" as authMiddleware
 participant "<<controllers>>\n:bookings" as controllersBookings
 participant "<<model>>\n:Booking" as modelBooking
 database "<<MongoDB>>\n:bookings" as BookingsDatabase
 
 client->server ++:req.get('/bookings/:id')
 server->routerBookings ++:app.use('/bookings',bookings)
-routerBookings -> controllersBookings ++:getBooking()
-controllersBookings -> modelBooking ++:find(req.params.id)
+routerBookings -> authMiddleware ++: protect()
+routerBookings <- authMiddleware --: next()
+routerBookings -> controllersBookings ++:getBooking
+controllersBookings -> modelBooking ++:findById(req.params.id)
 modelBooking -> BookingsDatabase ++: BookingSchema
 BookingsDatabase --> modelBooking --: booking
 controllersBookings <-- modelBooking --: booking

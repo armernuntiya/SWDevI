@@ -14,13 +14,14 @@ database "<<MongoDB>>\n:user" as UserDatabase
 
 client->server ++:req.get('/auth/me')
 server->routerUser ++:app.use('/auth',auth)
-routerUser -> authMiddleware ++: CheckAdminToken()
-authMiddleware -> controllersUser ++:getMe()
+routerUser -> authMiddleware ++: protect()
+routerUser <- authMiddleware --: next()
+routerUser -> controllersUser ++:getMe()
 controllersUser -> modelUser ++:findById(req.user.id)
 modelUser -> UserDatabase ++: UserSchema
 UserDatabase --> modelUser --: user
 controllersUser <-- modelUser --: user
-controllersUser -> client --:response
+controllersUser --> client --:response
 
 
 

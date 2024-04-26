@@ -14,9 +14,12 @@ database "<<MongoDB>>\n:companies" as CompaniesDatabase
 
 client->server ++:req.put('/companies/:id')
 server->routerCompanies ++:app.use('/companies',companies)
-routerCompanies -> authMiddleware ++: CheckAdminToken()
-authMiddleware -> controllersCompanies ++:updateCompany()
-controllersCompanies -> modelCompany ++:update(req.params.id, req.body)
+routerCompanies -> authMiddleware ++: protect()
+routerCompanies <- authMiddleware --: next()
+routerCompanies -> authMiddleware ++: authorize("admin")
+routerCompanies <- authMiddleware --: next()
+routerCompanies -> controllersCompanies ++:updateCompany
+controllersCompanies -> modelCompany ++:findByIdAndUpdate(req.params.id, req.body)
 modelCompany -> CompaniesDatabase ++: CompanySchema
 CompaniesDatabase --> modelCompany --: company
 controllersCompanies <-- modelCompany --: company

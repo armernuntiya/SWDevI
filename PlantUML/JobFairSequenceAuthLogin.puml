@@ -13,7 +13,7 @@ database "<<MongoDB>>\n:user" as UserDatabase
 
 client->server ++:req.post('/auth/login')
 server->routerUser ++:app.use('/auth',auth)
-routerUser -> controllersUser ++:login()
+routerUser -> controllersUser ++:login
 controllersUser -> modelUser ++:findOne(req.body)
 modelUser -> UserDatabase ++: UserSchema
 UserDatabase --> modelUser --: user

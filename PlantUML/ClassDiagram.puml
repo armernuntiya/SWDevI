@@ -6,13 +6,13 @@ package "OnlineJobFair"{
 
     class "<<Resource>>\nCompanies" as ResourceCompanies{
         <<GET>> +getCompanies():Company
-        <<POST>> +createCompany():Company
+        <<POST>> -createCompany():Company
     }
 
     class "<<Resource>>\nCompany" as ResourceCompany{
         <<GET>> +getCompany():Company
-        <<PUT>> +updateCompany():Company
-        <<DELETE>> +deleteCompany():Company
+        <<PUT>> -updateCompany():Company
+        <<DELETE>> -deleteCompany():Company
     }
     
 
@@ -53,13 +53,13 @@ package "OnlineJobFair"{
 
     class "<<Resource>>\nBookings" as ResourceBookings{
         <<GET>> +getBookings():Booking
-        <<POST>> +addBooking():Booking
+        <<POST>> -addBooking():Booking
     }
 
     class "<<Resource>>\nBooking" as ResourceBooking{
         <<GET>> +getBooking():Booking
-        <<PUT>> +updateBooking():Booking
-        <<DELETE>> +deleteBooking():void
+        <<PUT>> -updateBooking():Booking
+        <<DELETE>> -deleteBooking():void
     }
 
     class "<<Representation>>\nBooking" as RepresentationBooking{
@@ -76,6 +76,7 @@ package "OnlineJobFair"{
     OnlineJobFairService ..>  ResourceCompanies:"/companies\n<<Path>>"
     ResourceCompanies ..> ResourceCompany:"/{companyId}\n<<Path>>
     ResourceCompany ..> RepresentationCompany: "<<use>>"
+    ResourceCompany ..> ResourceBookings: "/bookings\n<<Path>>"
 
     OnlineJobFairService ..>  ResourceAuth:"/auth\n<<Path>>"
     ResourceAuth ..> ResourceLogin:"/login\n<<Path>>
