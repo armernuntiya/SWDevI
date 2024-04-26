@@ -14,8 +14,8 @@ database "<<MongoDB>>\n:companies" as CompaniesDatabase
 
 client->server ++:req.get('/companies/:id')
 server->routerCompanies ++:app.use('/companies',companies)
-routerCompanies -> controllersCompanies ++:getCompany()
-controllersCompanies -> modelCompany ++:find(req.params.id)
+routerCompanies -> controllersCompanies ++:getCompany
+controllersCompanies -> modelCompany ++:findById(req.params.id)
 modelCompany -> CompaniesDatabase ++: CompanySchema
 CompaniesDatabase --> modelCompany --: company
 controllersCompanies <-- modelCompany --: company

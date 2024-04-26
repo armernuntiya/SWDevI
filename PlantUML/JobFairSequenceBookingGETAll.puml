@@ -14,20 +14,26 @@ database "<<MongoDB>>\n:bookings" as BookingsDatabase
 
 client->server ++:req.get('/bookings')
 server->routerBooking ++:app.use('/bookings',bookings)
-routerBooking -> authMiddleware ++: CheckAdminToken()
-authMiddleware -> controllersBookings ++:getBookings()
-alt admin
-    controllersBookings -> modelBooking ++:find()
-    modelBooking -> BookingsDatabase ++: BookingSchema
-    BookingsDatabase --> modelBooking --: booking
-    controllersBookings <-- modelBooking --: booking
-    controllersBookings->client --:response
+routerBooking -> authMiddleware ++: protect()
+routerBooking <- authMiddleware --: next()
+routerBooking -> controllersBookings ++:getBookings
+alt admin and route is '/bookings'
+        controllersBookings -> modelBooking ++:find()
+        modelBooking -> BookingsDatabase ++: BookingSchema
+        BookingsDatabase --> modelBooking --: booking
+        controllersBookings <-- modelBooking --: booking
+else admin and route is '/companies/companyID/bookings'
+        controllersBookings -> modelBooking ++:find(req.params.companyID)
+        modelBooking -> BookingsDatabase ++: BookingSchema
+        BookingsDatabase --> modelBooking --: booking
+        controllersBookings <-- modelBooking --: booking
 else user
     controllersBookings -> modelBooking ++:find(req.user.id)
     modelBooking -> BookingsDatabase ++: BookingSchema
     BookingsDatabase --> modelBooking --: booking
     controllersBookings <-- modelBooking --: booking
-    controllersBookings->client --:response
-    end
+end
+controllersBookings->client --:response
+
 
 @enduml

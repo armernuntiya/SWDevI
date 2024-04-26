@@ -76,6 +76,7 @@ package "OnlineJobFair"{
     OnlineJobFairService ..>  ResourceCompanies:"/companies\n<<Path>>"
     ResourceCompanies ..> ResourceCompany:"/{companyId}\n<<Path>>
     ResourceCompany ..> RepresentationCompany: "<<use>>"
+    ResourceCompany ..> ResourceBookings: "/bookings\n<<Path>>"
 
     OnlineJobFairService ..>  ResourceAuth:"/auth\n<<Path>>"
     ResourceAuth ..> ResourceLogin:"/login\n<<Path>>

@@ -14,12 +14,15 @@ database "<<MongoDB>>\n:companies" as CompaniesDatabase
 
 client->server ++:req.delete('/companies/:id')
 server->routerCompanies ++:app.use('/companies',companies)
-routerCompanies -> authMiddleware ++: CheckAdminToken()
-authMiddleware -> controllersCompanies ++:deleteCompany()
-controllersCompanies -> modelCompany ++:delete(req.params.id)
+routerCompanies -> authMiddleware ++: protect()
+routerCompanies <- authMiddleware --: next()
+routerCompanies -> authMiddleware ++: authorize("admin")
+routerCompanies <- authMiddleware --: next()
+routerCompanies -> controllersCompanies ++:deleteCompany
+controllersCompanies -> modelCompany ++:deleteOne(req.params.id)
 modelCompany -> CompaniesDatabase ++: CompanySchema
 CompaniesDatabase --> modelCompany --: company
-controllersCompanies <-- modelCompany --: company
+controllersCompanies<-- modelCompany --: company
 controllersCompanies->client --:response
 
 

@@ -11,7 +11,7 @@ participant "<<controllers>>\n:auth" as controllersUser
 
 client->server ++:req.get('/auth/logout')
 server->routerUser ++:app.use('/auth',auth)
-routerUser -> controllersUser ++:logout()
-controllersUser -> client ++:response
+routerUser -> controllersUser ++:logout
+controllersUser -> client --:response
 
 @enduml
